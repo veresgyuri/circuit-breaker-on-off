@@ -1,14 +1,17 @@
-# ver 0.1 -- 2025-10-02 minimál
-# ver 0.2 -- 2025-10-02 REPL bevezetése
-# ver 0.22 - 2025-10-03 REPL kiegészítés imp. időkkel
-# ver 0.4 -- 2025-10-02 Rugó feszes input beépítése, de nem kell (ZöldiZ.)
-# ver 0.4 -- hibakezelésel beépítése
 # code.py - egyszerű megszakító (BE/KI) pulzusgenerátor CircuitPython alatt
+# code.py - egyszerű megszakító (BE/KI) pulzusgenerátor CircuitPython alatt
+# ver 0.1 - 2025-10-02 minimál
+# ver 0.2 - 2025-10-02 REPL bevezetése
+# soros monitorra írjuk a KI-BE eseményeket, ms időbélyeggel
+# ver 0.22 - 2025-10-03 REPL kiegészítés impulzus hossz időkkel
+# ver 0.3 - 2025-10-02 Rugó feszes bemenet
+# ver 0.4 -- Rugó feszes input nem kell (ZöldiZ.) + hibakezelés beépítése
+
 import board
 import digitalio
 import time
 
-VERSION = "0.4 - 2025-10-03" # Frissítettem a verziót, ahogy te is tetted
+VERSION = "0.4 - 2025-10-03"
 
 # --- GPIO PIN ---
 BE_PIN = board.GPIO1   # megszakító BE
@@ -26,11 +29,11 @@ print("VERSION:", VERSION)
 
 # --- pin inicializálás ---
 be = digitalio.DigitalInOut(BE_PIN)
-be.direction = digitalio.Direction.OUTPUT # JAVÍTVA ITT
+be.direction = digitalio.Direction.OUTPUT
 be.value = False
 
 ki = digitalio.DigitalInOut(KI_PIN)
-ki.direction = digitalio.Direction.OUTPUT # JAVÍTVA ITT
+ki.direction = digitalio.Direction.OUTPUT
 ki.value = False
 
 time.sleep(BOOT_DELAY)  # adunk egy kis időt boot után
