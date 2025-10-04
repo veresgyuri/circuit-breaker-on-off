@@ -1,7 +1,8 @@
-# ver 0.1 -- 2025-10-02 minimál
-# ver 0.2 -- 2025-10-02 REPL bevezetése
-# ver 0.22 - 2025-10-03 REPL kiegészítés imp. időkkel
 # code.py - egyszerű megszakító (BE/KI) pulzusgenerátor CircuitPython alatt
+# ver 0.1 - 2025-10-02 minimál
+# ver 0.2 - 2025-10-02 REPL bevezetése
+# soros monitorra írjuk a KI-BE eseményeket, ms időbélyeggel
+# ver 0.22 - 2025-10-03 REPL kiegészítés impulzus hossz időkkel
 
 import board
 import digitalio
