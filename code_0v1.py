@@ -1,12 +1,13 @@
 # ver 0.1 - 2025-10-02
 # code.py - egyszerű megszakító (BE/KI) pulzusgenerátor CircuitPython alatt
+# a legegyszerűbb minimális kód, semmi védelem, semmi kiegészítés
 import board
 import digitalio
 import time
 
 # --- CSERÉLD KI A KÖVETKEZŐKET a saját boardod PIN NEVEIRE ---
-BE_PIN = board.GP1   # <- ide írd a tényleges "BE" kimenet pin-jét
-KI_PIN = board.GP2   # <- ide írd a tényleges "KI" kimenet pin-jét
+BE_PIN = board.GPIO1   # <- ide írd a tényleges "BE" kimenet pin-jét
+KI_PIN = board.GPIO2   # <- ide írd a tényleges "KI" kimenet pin-jét
 
 # Idők másodpercben
 PULSE = 1.0
