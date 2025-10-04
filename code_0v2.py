@@ -1,6 +1,8 @@
+# code.py - egyszerű megszakító (BE/KI) pulzusgenerátor CircuitPython alatt
 # ver 0.1 - 2025-10-02 minimál
 # ver 0.2 - 2025-10-02 REPL bevezetése
-# code.py - egyszerű megszakító (BE/KI) pulzusgenerátor CircuitPython alatt
+# soros monitorra írjuk a KI-BE eseményeket, ms időbélyeggel
+
 import board
 import digitalio
 import time
