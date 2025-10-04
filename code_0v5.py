@@ -18,8 +18,8 @@ import time
 VERSION = "0.5 - 2025-10-03"
 
 # --- GPIO PIN ---
-BE_PIN = board.GPIO1   # megszakító BE
-KI_PIN = board.GPIO2   # megszakító KI
+BE_PIN = board.IO1   # megszakító BE
+KI_PIN = board.IO2   # megszakító KI
 
 # --- Times [sec] ---
 PULSE = 1.0
