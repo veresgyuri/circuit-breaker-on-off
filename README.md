@@ -26,3 +26,5 @@ Egy kis vizuális betekintés
 <img src="images/fogaskerek_egyuttes.jpg" alt="Fogaskerekek" width="400">
 
 <img src="images/nyomtatott_fogaskerek_kozeli.jpg" alt="Új kerék" width="400">
+
+<img src="images/test_aramkor.jpg" alt="0v9 áramkör" width="400">
