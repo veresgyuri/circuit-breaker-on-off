@@ -29,4 +29,4 @@ Egy kis vizuális betekintés
 
 <img src="images/test_aramkor.jpg" alt="0v9 áramkör" width="400">
 
-<img src="images/diagram1.png" alt="kapcsolási rajz1" width="400">
+<img src="images/diagram2.png" alt="kapcsolási rajz-2" width="400">
