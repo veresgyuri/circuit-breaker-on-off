@@ -11,17 +11,18 @@ import board
 import digitalio
 import time
 
-VERSION = "0.4 - 2025-10-03"
+VERSION = "0.45 - 2025-10-03"
 
 # --- GPIO PIN ---
-BE_PIN = board.GPIO1   # megszakító BE
-KI_PIN = board.GPIO2   # megszakító KI
+BE_PIN = board.IO1   # megszakító BE
+KI_PIN = board.IO2   # megszakító KI
 
 # --- Times [sec] ---
-PULSE = 1.0
+PULSE = 1.0 # KI és BE impulzus hossza
 WAIT_AFTER_BE = 20.0
 WAIT_AFTER_KI = 10.0
 BOOT_DELAY = 0.5  # rövid várakozás boot után
+FIRST_BE = 5 # az első BE előtti idő, a boot után
 
 # --- Kiírjuk a verziót induláskor ---
 print("Circuit-breaker tester")
@@ -45,9 +46,12 @@ try:
     # --- Nullapont beállítása (ms felbontás alapja) ---
     t0 = time.monotonic()
     print("időzítő nullázva és elindítva")
-
+    
     def now_ms():
         return int((time.monotonic() - t0) * 1000)
+    
+    print("      [{0} ms] AZ első BE impulzus {1} mp múlva.".format(now_ms(), FIRST_BE))
+    time.sleep(FIRST_BE)
 
     # --- végtelen ciklus ---
     while True:
@@ -57,7 +61,7 @@ try:
         time.sleep(PULSE)
         be.value = False
         print("[{0} ms] BE impulzus visszavéve".format(now_ms()))
-        print("      [{0} ms] KI impulzus {1} mp múlva várható.".format(now_ms(), WAIT_AFTER_BE))
+        print("      [{0} ms] KI impulzus {1} mp múlva.".format(now_ms(), WAIT_AFTER_BE))
 
 
         # 20 s csönd (mindkettő GPIO inaktív)
@@ -69,7 +73,7 @@ try:
         time.sleep(PULSE)
         ki.value = False
         print("[{0} ms] KI impulzus visszavéve".format(now_ms()))
-        print("      [{0} ms] BE impulzus {1} mp múlva várható.".format(now_ms(), WAIT_AFTER_KI))
+        print("      [{0} ms] BE impulzus {1} mp múlva.".format(now_ms(), WAIT_AFTER_KI))
 
         # 10 s csönd
         time.sleep(WAIT_AFTER_KI)
@@ -84,8 +88,8 @@ finally:
     print("[INFO] Tisztító műveletek végrehajtása...")
     if be is not None:
         be.value = False
-        be.deinit() # A kettőskereszt eltávolítva
+        be.deinit() # IO1 tisztítás
     if ki is not None:
         ki.value = False
-        ki.deinit() # A kettőskereszt eltávolítva
+        ki.deinit() # IO2 tisztítás
     print("[INFO] Program leállítva.")
