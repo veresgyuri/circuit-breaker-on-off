@@ -7,7 +7,7 @@ Sorry folks, this repo comes with Hungarian comments only 🙂
 
 Egy műanyag fogaskerék cseréje után folyamatos KI-BE kapcsolásokkal nyúzzuk a rugóerőtároló egység felhúzó motorját.
 
-A cél annak kiderítése, hogy a legyártott fogaskerék anyagválasztása sikeres volt-e.
+# A cél annak kiderítése, hogy a legyártott fogaskerék anyagválasztása sikeres volt-e.
 
 Hardver: ESP32-S3 mikrovezérló
 
