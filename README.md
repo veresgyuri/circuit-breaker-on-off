@@ -9,9 +9,9 @@ Egy műanyag fogaskerék cseréje után folyamatos KI-BE kapcsolásokkal nyúzzu
 
 # A cél annak kiderítése, hogy a legyártott fogaskerék anyagválasztása sikeres volt-e.
 
-Hardver: ESP32-S3 mikrovezérló
+Hardver: ESP32-S3-Zero mikrovezérló
 
-Szoftver: CircuitPython 9.x
+Szoftver: CircuitPython 10.x
 
 A CircuitPython jelenleg a legdinamikusabban fejlődő programozási nyelv a DIY kategóriában (2025. okt.)
 
