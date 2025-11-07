@@ -1,4 +1,4 @@
-# code.py - egyszerű megszakító (BE/KI) pulzusgenerátor CircuitPython alatt
+"""code.py - egyszerű megszakító (BE/KI) pulzusgenerátor CircuitPython alatt"""
 # ver 0.1 - 2025-10-02 minimál
 # ver 0.2 - 2025-10-02 REPL bevezetése
 # soros monitorra írjuk a KI-BE eseményeket, ms időbélyeggel
@@ -6,24 +6,24 @@
 # ver 0.3 - 2025-10-02 Rugó feszes bemenet
 # ver 0.4 -- Rugó feszes input nem kell (ZöldiZ.) + hibakezelés beépítése
 # ver 0.45 - REPL üzenet véglegesítés + GPIO deinit, tisztítás
-# ver 0.5 -- működés -ciklus- számláló beépítése
+# ver 0.5 -- működés -ciklus- számláló beépítése -- VSCode javítással
 
-# zsákutca, mert a rugó feszes jelzés figyelése nélkül nem tudjuk,
-# hogy valós működés zajlott-e (csak a mi KI-BE ciklusunkat számoljuk
+# vakrepülés, mert a rugó feszes jelzés figyelése nélkül nem tudjuk,
+# hogy valós működés zajlott-e (csak a mi KI-BE ciklusunkat számoljuk)
 
+import time
 import board
 import digitalio
-import time
 
 VERSION = "0.5 - 2025-10-03"
 
-# --- GPIO PIN ---
+# --- GPIO Pin ---
 BE_PIN = board.IO1   # megszakító BE
 KI_PIN = board.IO2   # megszakító KI
 
 # --- Times [sec] ---
-PULSE = 1.0
-WAIT_AFTER_BE = 20.0
+PULSE = 1.0   # KI és BE impulzus hossza
+WAIT_AFTER_BE = 10.0
 WAIT_AFTER_KI = 10.0
 BOOT_DELAY = 0.5  # rövid várakozás boot után
 
@@ -31,12 +31,12 @@ BOOT_DELAY = 0.5  # rövid várakozás boot után
 print("Circuit-breaker tester\n")
 print("VERSION:", VERSION)
 
-# --- pin inicializálás ---
-be = None # Kezdetben None
-ki = None # Kezdetben None
+# --- Pin inicializálás ---
+BE = None # Kezdetben None
+KI = None # Kezdetben None
 
-# --- CIKLUSSZÁMLÁLÓ INICIALIZÁLÁSA ---
-cycle_count = 0
+# --- Ciklusszámláló inicializálása ---
+CYCLE_COUNT = 0
 
 try:
     be = digitalio.DigitalInOut(BE_PIN)
@@ -54,38 +54,36 @@ try:
     print("\nidőzítő nullázva és elindítva")
 
     def now_ms():
+        """stopper indítás, nullázása - ms időbélyeghez"""
         return int((time.monotonic() - t0) * 1000)
 
-    # --- végtelen ciklus ---
+    # --- Végtelen ciklus ---
     while True:
         # BE impulzus kezdete — kiírás ms pontossággal
-        print("[{0} ms] BE impulzus kiadva".format(now_ms()))
+        print(f"[{now_ms()} ms] BE impulzus kiadva")
         be.value = True
         time.sleep(PULSE)
         be.value = False
-        print("[{0} ms] BE impulzus visszavéve".format(now_ms()))
-        print("      [{0} ms] KI impulzus {1} mp múlva........".format(now_ms(), WAIT_AFTER_BE))
+        print(f"[{now_ms()} ms] BE impulzus visszavéve")
+        print(f"      [{now_ms()} ms] KI impulzus {WAIT_AFTER_BE} mp múlva........")
 
-
-        # 20 s csönd (mindkettő GPIO inaktív)
+        # Csönd (mindkettő GPIO inaktív)
         time.sleep(WAIT_AFTER_BE)
 
         # KI impulzus kezdete — kiírás ms pontossággal
-        print("[{0} ms] KI impulzus kiadva".format(now_ms()))
+        print(f"[{now_ms()} ms] KI impulzus kiadva")
         ki.value = True
         time.sleep(PULSE)
         ki.value = False
-        print("[{0} ms] KI impulzus visszavéve".format(now_ms()))
-        
-        # --- CIKLUSSZÁMLÁLÓ NÖVELÉSE ÉS KIÍRÁSA ---
-        cycle_count += 1
-        print("\n===== [{0} ms] Ciklus befejezve. Eddig {1} motorfelhúzás volt =====\n".format(now_ms(), cycle_count))
-        print("      [{0} ms] BE impulzus {1} mp múlva........".format(now_ms(), WAIT_AFTER_KI))
+        print(f"[{now_ms()} ms] KI impulzus visszavéve")
 
-        # 10 s csönd
+        # --- Ciklusszámláló növelése és kiírása ---
+        CYCLE_COUNT += 1
+        print(f"\n===== [{now_ms()} ms] Ciklus vége. Eddig {CYCLE_COUNT} motorfelhúzás volt =====\n")
+        print(f"      [{now_ms()} ms] BE impulzus {WAIT_AFTER_KI} mp múlva........")
+
+        # Csönd (mindkettő GPIO inaktív)
         time.sleep(WAIT_AFTER_KI)
-
-        
 
 except KeyboardInterrupt:
     print("\n[INFO] Program megszakítva a felhasználó által.")
@@ -95,10 +93,10 @@ except Exception as e:
 
 finally:
     print("[INFO] Tisztító műveletek végrehajtása...")
-    if be is not None:
+    if BE is not None:
         be.value = False
         be.deinit()
-    if ki is not None:
+    if KI is not None:
         ki.value = False
         ki.deinit()
     print("[INFO] Program leállítva.")
