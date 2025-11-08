@@ -1,4 +1,4 @@
-"""code.py - egyszerű megszakító (BE/KI) pulzusgenerátor CircuitPython alatt"""
+"""code.py - egyszerű megszakító (BE/KI) pulzusgenerátor CircuitPython 10.0.0 alatt"""
 # ver 0.1 - 2025-10-02 minimál
 # ver 0.2 - 2025-10-02 REPL bevezetése
 # soros monitorra írjuk a KI-BE eseményeket, ms időbélyeggel
@@ -7,7 +7,7 @@
 # ver 0.4 -- Rugó feszes input nem kell (ZöldiZ.) + hibakezelés beépítése
 # ver 0.45 - REPL üzenet véglegesítés + GPIO deinit, tisztítás
 # ver 0.5 -- működés -ciklus- számláló beépítése -- VSCode javítással
-# ver 0.55 - 2025-11-09 CYCLE_COUNT mentése flash-be (/vd4.txt) minden ciklus végén
+# ver 0.55 - 2025-11-08 CYCLE_COUNT mentése flash-be (/vd4.txt) minden ciklus végén
 
 # vakrepülés, mert a rugó feszes jelzés figyelése nélkül nem tudjuk,
 # hogy valós működés zajlott-e (csak a mi KI-BE ciklusunkat számoljuk)
@@ -17,7 +17,7 @@ import board
 import digitalio
 import storage
 
-VERSION = "0.55 - 2025-11-09"
+VERSION = "0.55 - 2025-11-08"
 
 # --- GPIO Pin ---
 BE_PIN = board.IO1   # megszakító BE
@@ -39,13 +39,13 @@ KI = None
 
 # --- Ciklusszámláló ---
 CYCLE_COUNT = 0
-COUNT_FILE = "/vd4.txt"
+COUNT_FILE = "/szamlalo.txt"
 
 def save_cycle_count(count):
     """Egyszerű ciklusszámláló mentés a flash-be."""
     try:
         storage.remount("/", False)  # írás engedélyezése
-        with open(COUNT_FILE, "w", encoding="utf-8") as f:
+        with open(COUNT_FILE, "a", encoding="utf-8") as f:
             f.write(str(count) + "\n")
         storage.remount("/", True)   # vissza olvasási módba
         print(f"[INFO] Számláló mentve flash-be: {count}")
