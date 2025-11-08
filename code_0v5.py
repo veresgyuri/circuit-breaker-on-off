@@ -39,13 +39,13 @@ KI = None # Kezdetben None
 CYCLE_COUNT = 0
 
 try:
-    be = digitalio.DigitalInOut(BE_PIN)
-    be.direction = digitalio.Direction.OUTPUT
-    be.value = False
+    BE = digitalio.DigitalInOut(BE_PIN)
+    BE.direction = digitalio.Direction.OUTPUT
+    BE.value = False
 
-    ki = digitalio.DigitalInOut(KI_PIN)
-    ki.direction = digitalio.Direction.OUTPUT
-    ki.value = False
+    KI = digitalio.DigitalInOut(KI_PIN)
+    KI.direction = digitalio.Direction.OUTPUT
+    KI.value = False
 
     time.sleep(BOOT_DELAY)
 
@@ -61,26 +61,26 @@ try:
     while True:
         # BE impulzus kezdete — kiírás ms pontossággal
         print(f"[{now_ms()} ms] BE impulzus kiadva")
-        be.value = True
+        BE.value = True
         time.sleep(PULSE)
-        be.value = False
+        BE.value = False
         print(f"[{now_ms()} ms] BE impulzus visszavéve")
-        print(f"      [{now_ms()} ms] KI impulzus {WAIT_AFTER_BE} mp múlva........")
+        print(f"     [{now_ms()} ms] KI impulzus {WAIT_AFTER_BE} mp múlva........")
 
         # Csönd (mindkettő GPIO inaktív)
         time.sleep(WAIT_AFTER_BE)
 
         # KI impulzus kezdete — kiírás ms pontossággal
         print(f"[{now_ms()} ms] KI impulzus kiadva")
-        ki.value = True
+        KI.value = True
         time.sleep(PULSE)
-        ki.value = False
+        KI.value = False
         print(f"[{now_ms()} ms] KI impulzus visszavéve")
 
         # --- Ciklusszámláló növelése és kiírása ---
         CYCLE_COUNT += 1
-        print(f"\n===== [{now_ms()} ms] Ciklus vége. Eddig {CYCLE_COUNT} motorfelhúzás volt =====\n")
-        print(f"      [{now_ms()} ms] BE impulzus {WAIT_AFTER_KI} mp múlva........")
+        print(f"\n==== [{now_ms()} ms] Ciklus vége. Eddig {CYCLE_COUNT} motorfelhúzás volt ====\n")
+        print(f"     [{now_ms()} ms] BE impulzus {WAIT_AFTER_KI} mp múlva........")
 
         # Csönd (mindkettő GPIO inaktív)
         time.sleep(WAIT_AFTER_KI)
@@ -94,9 +94,9 @@ except Exception as e:
 finally:
     print("[INFO] Tisztító műveletek végrehajtása...")
     if BE is not None:
-        be.value = False
-        be.deinit()
+        BE.value = False
+        BE.deinit()
     if KI is not None:
-        ki.value = False
-        ki.deinit()
+        KI.value = False
+        KI.deinit()
     print("[INFO] Program leállítva.")
