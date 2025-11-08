@@ -1,14 +1,25 @@
-# code.py - egyszerű megszakító (BE/KI) pulzusgenerátor CircuitPython alatt
-# ver 0.55 - 2025-11-06 számláló mentés flash-be (vd4.txt) - save_cycle_count()
+"""code.py - egyszerű megszakító (BE/KI) pulzusgenerátor CircuitPython alatt"""
+# ver 0.1 - 2025-10-02 minimál
+# ver 0.2 - 2025-10-02 REPL bevezetése
+# soros monitorra írjuk a KI-BE eseményeket, ms időbélyeggel
+# ver 0.22 - 2025-10-03 REPL kiegészítés impulzus hossz időkkel
+# ver 0.3 - 2025-10-02 Rugó feszes bemenet
+# ver 0.4 -- Rugó feszes input nem kell (ZöldiZ.) + hibakezelés beépítése
+# ver 0.45 - REPL üzenet véglegesítés + GPIO deinit, tisztítás
+# ver 0.5 -- működés -ciklus- számláló beépítése -- VSCode javítással
+# ver 0.55 - 2025-11-09 CYCLE_COUNT mentése flash-be (/vd4.txt) minden ciklus végén
 
+# vakrepülés, mert a rugó feszes jelzés figyelése nélkül nem tudjuk,
+# hogy valós működés zajlott-e (csak a mi KI-BE ciklusunkat számoljuk)
+
+import time
 import board
 import digitalio
-import time
-import os
+import storage
 
-VERSION = "0.55 - 2025-11-06"
+VERSION = "0.55 - 2025-11-09"
 
-# --- GPIO PIN ---
+# --- GPIO Pin ---
 BE_PIN = board.IO1   # megszakító BE
 KI_PIN = board.IO2   # megszakító KI
 
@@ -22,51 +33,34 @@ BOOT_DELAY = 0.5  # rövid várakozás boot után
 print("Circuit-breaker tester\n")
 print("VERSION:", VERSION)
 
-# --- fájlnevek ---
+# --- Pin inicializálás ---
+BE = None
+KI = None
+
+# --- Ciklusszámláló ---
+CYCLE_COUNT = 0
 COUNT_FILE = "/vd4.txt"
 
-# --- függvények ---
-
-def load_cycle_count():
-    """Korábbi számláló érték beolvasása flash-ből."""
+def save_cycle_count(count):
+    """Egyszerű ciklusszámláló mentés a flash-be."""
     try:
-        with open(COUNT_FILE, "r") as f:
-            return int(f.read().strip())
-    except Exception:
-        return 0  # ha nincs fájl, vagy hiba volt
-
-def save_cycle_count(n):
-    """Számláló biztonságos mentése flash-be."""
-    tmp = COUNT_FILE + ".tmp"
-    try:
-        with open(tmp, "w") as f:
-            f.write(str(n) + "\n")
-            f.flush()
-        try:
-            os.sync()  # ha a build támogatja
-        except Exception:
-            pass
-        os.rename(tmp, COUNT_FILE)  # atomikus csere
-    except OSError as e:
-        print("[HIBA] Mentés sikertelen:", e)
-
-
-# --- pin inicializálás ---
-be = None
-ki = None
-
-# --- CIKLUSSZÁMLÁLÓ INICIALIZÁLÁSA ---
-cycle_count = load_cycle_count()
-print(f"[INFO] Korábbi számláló érték: {cycle_count}")
+        storage.remount("/", False)  # írás engedélyezése
+        with open(COUNT_FILE, "w", encoding="utf-8") as f:
+            f.write(str(count) + "\n")
+        storage.remount("/", True)   # vissza olvasási módba
+        print(f"[INFO] Számláló mentve flash-be: {count}")
+    # pylint: disable=broad-exception-caught
+    except Exception as e:
+        print(f"[HIBA] Flash mentés sikertelen: {e}")
 
 try:
-    be = digitalio.DigitalInOut(BE_PIN)
-    be.direction = digitalio.Direction.OUTPUT
-    be.value = False
+    BE = digitalio.DigitalInOut(BE_PIN)
+    BE.direction = digitalio.Direction.OUTPUT
+    BE.value = False
 
-    ki = digitalio.DigitalInOut(KI_PIN)
-    ki.direction = digitalio.Direction.OUTPUT
-    ki.value = False
+    KI = digitalio.DigitalInOut(KI_PIN)
+    KI.direction = digitalio.Direction.OUTPUT
+    KI.value = False
 
     time.sleep(BOOT_DELAY)
 
@@ -75,47 +69,46 @@ try:
     print("\nidőzítő nullázva és elindítva")
 
     def now_ms():
+        """Visszaadja az eltelt időt ezredmásodpercben"""
         return int((time.monotonic() - t0) * 1000)
 
-    # --- végtelen ciklus ---
+    # --- Végtelen ciklus ---
     while True:
         # BE impulzus
-        print("[{0} ms] BE impulzus kiadva".format(now_ms()))
-        be.value = True
+        print(f"[{now_ms()} ms] BE impulzus kiadva")
+        BE.value = True
         time.sleep(PULSE)
-        be.value = False
-        print("[{0} ms] BE impulzus visszavéve".format(now_ms()))
-        print("      [{0} ms] KI impulzus {1} mp múlva........".format(now_ms(), WAIT_AFTER_BE))
-
+        BE.value = False
+        print(f"[{now_ms()} ms] BE impulzus visszavéve")
+        print(f"     [{now_ms()} ms] KI impulzus {WAIT_AFTER_BE} mp múlva........")
         time.sleep(WAIT_AFTER_BE)
 
         # KI impulzus
-        print("[{0} ms] KI impulzus kiadva".format(now_ms()))
-        ki.value = True
+        print(f"[{now_ms()} ms] KI impulzus kiadva")
+        KI.value = True
         time.sleep(PULSE)
-        ki.value = False
-        print("[{0} ms] KI impulzus visszavéve".format(now_ms()))
+        KI.value = False
+        print(f"[{now_ms()} ms] KI impulzus visszavéve")
 
-        # --- CIKLUSSZÁMLÁLÓ NÖVELÉSE ÉS KIÍRÁSA ---
-        cycle_count += 1
-        print("\n===== [{0} ms] Ciklus befejezve. Eddig {1} motorfelhúzás volt =====\n".format(now_ms(), cycle_count))
-        save_cycle_count(cycle_count)
-        print("[INFO] Számláló mentve flash-be.")
-
-        print("      [{0} ms] BE impulzus {1} mp múlva........".format(now_ms(), WAIT_AFTER_KI))
+        # --- Ciklusszámláló növelése és mentése ---
+        CYCLE_COUNT += 1
+        print(f"\n==== [{now_ms()} ms] Ciklus vége. Eddig {CYCLE_COUNT} motorfelhúzás volt ====\n")
+        save_cycle_count(CYCLE_COUNT)
+        print(f"     [{now_ms()} ms] BE impulzus {WAIT_AFTER_KI} mp múlva........")
         time.sleep(WAIT_AFTER_KI)
 
 except KeyboardInterrupt:
     print("\n[INFO] Program megszakítva a felhasználó által.")
+# pylint: disable=broad-exception-caught
 except Exception as e:
     print(f"\n[HIBA] Váratlan hiba történt: {e}")
     print("[HIBA] Kérjük, ellenőrizze a kódot és a hardverkapcsolatokat.")
 finally:
     print("[INFO] Tisztító műveletek végrehajtása...")
-    if be is not None:
-        be.value = False
-        be.deinit()
-    if ki is not None:
-        ki.value = False
-        ki.deinit()
+    if BE is not None:
+        BE.value = False
+        BE.deinit()
+    if KI is not None:
+        KI.value = False
+        KI.deinit()
     print("[INFO] Program leállítva.")
