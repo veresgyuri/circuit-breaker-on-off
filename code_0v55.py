@@ -7,7 +7,7 @@
 # ver 0.4 -- Rugó feszes input nem kell (ZöldiZ.) + hibakezelés beépítése
 # ver 0.45 - REPL üzenet véglegesítés + GPIO deinit, tisztítás
 # ver 0.5 -- működés -ciklus- számláló beépítése -- VSCode javítással
-# ver 0.55 - 2025-11-08 CYCLE_COUNT mentése flash-be (/vd4.txt) minden ciklus végén
+# ver 0.55 - 2025-11-08 CYCLE_COUNT mentése flash-be (/szamlalo.txt) minden ciklus végén
 
 # vakrepülés, mert a rugó feszes jelzés figyelése nélkül nem tudjuk,
 # hogy valós működés zajlott-e (csak a mi KI-BE ciklusunkat számoljuk)
