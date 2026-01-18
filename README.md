@@ -16,7 +16,7 @@ A teljes jogi és biztonsági információkat [itt olvashatod](SAFETY_AND_LEGAL.
 **Az alapprobléma:**  
 A rugófelhúzó egységben, idővel elreped az egyik fröccsöntött fogaskerék.
 
-<img src="images/vd4_motorblokk_repedt_kerek_kozeli.jpg" alt="Elrepedt" width="200">
+<img src="images/motorblokk_repedt_kerek_kozeli.jpg" alt="Elrepedt" width="200">
 
 **Egy lehetséges megoldás:**  
 3D nyomtatott műanyag fogaskerékre cseréljük a hibás alkatrészt.
@@ -38,7 +38,7 @@ Ha ötleted van, vagy hibát találsz, bátran jelezd!
 ---
 Egy kis vizuális betekintés
 
-<img src="images/vd4_motorblokk_repedt_kerek.png" alt="Elrepedt" width="400">
+<img src="images/motorblokk_repedt_kerek.png" alt="Elrepedt" width="400">
 
 <img src="images/rugofelhuzo_motorblokk.jpg" alt="Motorblokk" width="400">
 
