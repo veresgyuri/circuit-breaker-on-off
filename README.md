@@ -1,9 +1,18 @@
 # circuit-breaker-on-off
 CircuitPython test code for a spring charging motor of the high-voltage circuit breaker
 
+**Disclaimer:** This is an independent, non-manufacturer document.  
+See [SAFETY_AND_LEGAL.md](SAFETY_AND_LEGAL.md) for full legal and safety information.
+
 Sorry folks, this repo comes with Hungarian comments only 🙂
 
 # --- KÖF megszakító – felhúzómotor tesztelése ---
+
+**Jogi figyelmeztetés:** Ez egy független, nem gyártói anyag.  
+A teljes jogi és biztonsági információkat [itt olvashatod](SAFETY_AND_LEGAL.md).
+
+**Az alapprobléma** és amiért ez a projekt létrejött:  
+A rugófelhúzó egységen, idővel elreped az egyik fogaskerék.
 
 Egy műanyag fogaskerék cseréje után folyamatos KI-BE kapcsolásokkal nyúzzuk a rugóerőtároló egység felhúzó motorját.
 
