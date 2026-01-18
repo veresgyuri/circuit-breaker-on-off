@@ -8,7 +8,7 @@ Version:
 import time
 import storage
 
-FILENAME = "/vd4.txt"
+FILENAME = "/szamlalo.txt"
 
 print("Flash teszt indul...")
 
