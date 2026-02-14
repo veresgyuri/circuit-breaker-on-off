@@ -1,6 +1,8 @@
 # circuit-breaker-on-off
 CircuitPython test code for a spring charging motor of the high-voltage circuit breaker
 
+**Status:** Project closed / finalized by Gyuri on 2026-02-14
+
 **Disclaimer:**  
 This is an independent, non-manufacturer document.  
 See [SAFETY_AND_LEGAL.md](SAFETY_AND_LEGAL.md) for full legal and safety information.
